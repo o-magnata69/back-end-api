@@ -12,6 +12,16 @@ const app = express(); // Inicializa o servidor Express
 const port = 3000; // Define a porta onde o servidor irá escutar
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 const { Pool } = pkg; // Obtém o construtor Pool do pacote pg para gerenciar conexões com o banco de dados PostgreSQL
+let pool = null; // Variável para armazenar o pool de conexões com o banco de dados
+
+function conectarBD() {
+  if (!pool) {
+    pool = new Pool({
+      connectionString: process.env.URL_BD,
+    });
+  }
+  return pool;
+}
 
 // ######
 // Local onde as rotas (endpoints) serão definidas
@@ -26,10 +36,7 @@ app.get("/", async (req, res) => {
 
   console.log("Rota GET / solicitada"); // Log no terminal para indicar que a rota foi acessada
 
-  const db = new Pool({
-    // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
-    connectionString: process.env.URL_BD, // Usa a variável de ambiente do arquivo .env DATABASE_URL para a string de conexão
-  });
+  const db = conectarBD(); // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
 
   let dbStatus = "ok";
 
@@ -62,20 +69,14 @@ app.listen(port, () => {
 app.get("/questoes", async (req, res) => {
 	console.log("Rota GET /questoes solicitada"); // Log no terminal para indicar que a rota foi acessada
 
+  const db = conectarBD(); // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
+
   //server.js
-const { Pool } = pkg; // Obtém o construtor Pool do pacote pg para gerenciar conexões com o banco de dados PostgreSQL
-
-const db = new Pool({
-  // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
-  connectionString: process.env.URL_BD, // Usa a variável de ambiente do arquivo .env DATABASE_URL para a string de conexão
-});
-
-//server.js
-try {
+  try {
     const resultado = await db.query("SELECT * FROM questoes"); // Executa uma consulta SQL para selecionar todas as questões
     const dados = resultado.rows; // Obtém as linhas retornadas pela consulta
     res.json(dados); // Retorna o resultado da consulta como JSON
-  } catch (e) {
+    } catch (e) {
     console.error("Erro ao buscar questões:", e); // Log do erro no servidor
     res.status(500).json({
       erro: "Erro interno do servidor",

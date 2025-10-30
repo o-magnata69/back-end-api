@@ -16,12 +16,12 @@ let pool = null; // Variável para armazenar o pool de conexões com o banco de 
 app.use(express.json()); // Middleware para interpretar requisições com corpo em JSON
 
 function conectarBD() {
-  if (!pool) {
-    pool = new Pool({
-      connectionString: process.env.URL_BD,
-    });
-  }
-  return pool;
+ if (!pool) {
+ pool = new Pool({
+ connectionString: process.env.URL_BD,
+ });
+ }
+ return pool;
 }
 
 // ######
@@ -29,32 +29,32 @@ function conectarBD() {
 // ######
 
 app.get("/", async (req, res) => {
-  // Rota raiz do servidor
-  // Rota GET /
-  // Esta rota é chamada quando o usuário acessa a raiz do servidor
-  // Ela retorna uma mensagem de boas-vindas e o status da conexão com o banco de dados
-  // Cria a rota da raiz do projeto
+ // Rota raiz do servidor
+ // Rota GET /
+ // Esta rota é chamada quando o usuário acessa a raiz do servidor
+ // Ela retorna uma mensagem de boas-vindas e o status da conexão com o banco de dados
+ // Cria a rota da raiz do projeto
 
-  console.log("Rota GET / solicitada"); // Log no terminal para indicar que a rota foi acessada
+ console.log("Rota GET / solicitada"); // Log no terminal para indicar que a rota foi acessada
 
-  const db = conectarBD(); // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
+ const db = conectarBD(); // Cria uma nova instância do Pool para gerenciar conexões com o banco de dados
 
-  let dbStatus = "ok";
+ let dbStatus = "ok";
 
-  // Tenta executar uma consulta simples para verificar a conexão com o banco de dados
-  // Se a consulta falhar, captura o erro e define o status do banco de dados como a mensagem de erro
-  try {
-    await db.query("SELECT 1");
-  } catch (e) {
-    dbStatus = e.message;
-  }
+ // Tenta executar uma consulta simples para verificar a conexão com o banco de dados
+ // Se a consulta falhar, captura o erro e define o status do banco de dados como a mensagem de erro
+ try {
+ await db.query("SELECT 1");
+ } catch (e) {
+ dbStatus = e.message;
+ }
 
-  // Responde com um JSON contendo uma mensagem, o nome do autor e o status da conexão com o banco de dados
-  res.json({
-    message: "API para Achados e Perdidos", // Substitua pelo conteúdo da sua API
-    author: "João Pedro Almeida Caldeira", // Substitua pelo seu nome
-    dbStatus: dbStatus,
-  });
+ // Responde com um JSON contendo uma mensagem, o nome do autor e o status da conexão com o banco de dados
+ res.json({
+ message: "API para Achados e Perdidos", // Substitua pelo conteúdo da sua API
+ author: "João Pedro Almeida Caldeira", // Substitua pelo seu nome
+ dbStatus: dbStatus,
+ });
 });
 
 // ######################################################
@@ -226,7 +226,7 @@ app.delete("/usuarios/:id", async (req, res) => {
 
 
 // ######################################################
-// ## ROTAS /QUESTOES (SEU CÓDIGO ORIGINAL)           ##
+// ## ROTAS /QUESTOES           ##
 // ######################################################
 
 //server.js
